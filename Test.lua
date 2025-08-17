@@ -1,18 +1,19 @@
-local remotes = {
-    "ServerMessage",
-    "BanPlayer",
-    "skibidtoilet"
-	"AntiexplpoitOwO"
-}
+local myArray = {}
 
-for _, name in pairs(remotes) do
-    local remote = game:GetService("ReplicatedStorage"):FindFirstChild(name)
-    if remote and remote:IsA("RemoteEvent") then
+local Replicated = game:GetService("ReplicatedStorage")
+local folder = Replicated:WaitForChild("AutoSerde"):WaitForChild("AntiexplpoitOwO")
 
-        remote:Destroy()
-        print("[ANTIKICK] Remote destruido: " .. name)
+for _, remote in pairs(folder:GetChildren()) do
+    if remote:IsA("RemoteEvent") then
+        table.insert(myArray, remote) -- guardamos el objeto RemoteEvent
     end
 end
+
+-- Ahora podés acceder a cada RemoteEvent así:
+for _, remote in ipairs(myArray) do
+    print(remote.Name)
+end
+
 
 
 local Players = game:GetService("Players")
