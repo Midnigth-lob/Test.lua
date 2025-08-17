@@ -87,7 +87,7 @@ local function setupCharacter(char)
 
 	if bodyVelocity then bodyVelocity:Destroy() end
 	bodyVelocity = Instance.new("BodyVelocity")
-	bodyVelocity.MaxForce = Vector3.new(0,0,0) -- inicial sin control
+	bodyVelocity.MaxForce = Vector3.new(0,0,0) -- inactivo al inicio
 	bodyVelocity.Velocity = Vector3.new(0,0,0)
 	bodyVelocity.Parent = hrp
 end
@@ -104,7 +104,7 @@ flyBtn.MouseButton1Click:Connect(function()
 	if flying then
 		bodyVelocity.MaxForce = Vector3.new(1e5,1e5,1e5)
 	else
-		bodyVelocity.MaxForce = Vector3.new(0,0,0)
+		bodyVelocity.MaxForce = Vector3.new(0,0,0) -- desactiva control
 		flyY = 0
 	end
 end)
