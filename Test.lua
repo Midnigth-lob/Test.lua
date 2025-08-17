@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local PlayerGui = player:WaitForChild("PlayerGui")
+local plr = Players.LocalPlayer
+local player = game.Players.LocalPlayer
+local PlayerGui = plr:WaitForChild("PlayerGui")
 
 -- Crear ScreenGui
 local ScreenGui = Instance.new("ScreenGui")
@@ -75,7 +76,7 @@ FloatingButton.MouseButton1Click:Connect(function()
 end)
 
 -- Variables de control
-local character = player.Character or player.CharacterAdded:Wait()
+local character = plr.Character or plr.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local hrp = character:WaitForChild("HumanoidRootPart")
 local flying = false
