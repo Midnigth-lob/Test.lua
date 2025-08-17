@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 
@@ -65,7 +66,6 @@ closeBtn.MouseButton1Click:Connect(function()
 	Frame.Visible = false
 	FloatingButton.Visible = true
 end)
-
 FloatingButton.MouseButton1Click:Connect(function()
 	Frame.Visible = true
 	FloatingButton.Visible = false
@@ -88,43 +88,36 @@ bodyVelocity.Parent = hrp
 flyBtn.MouseButton1Click:Connect(function()
 	flying = not flying
 	flyBtn.Text = flying and "Fly: ON" or "Fly: OFF"
-	if not flying then
-		bodyVelocity.Velocity = Vector3.new(0,0,0)
-	end
 end)
 
--- Jump y WalkSpeed
+-- JumpHeight y WalkSpeed iniciales
 local baseJump = humanoid.JumpHeight
 local baseSpeed = humanoid.WalkSpeed
 
 jumpPlus.MouseButton1Click:Connect(function()
 	humanoid.JumpHeight = humanoid.JumpHeight + 5
 end)
-
 jumpMinus.MouseButton1Click:Connect(function()
-	humanoid.JumpHeight = math.max(baseJump, humanoid.JumpHeight - 5)
+	humanoid.JumpHeight = math.max(0, humanoid.JumpHeight - 5)
 end)
-
 speedPlus.MouseButton1Click:Connect(function()
 	humanoid.WalkSpeed = humanoid.WalkSpeed + 5
 end)
-
 speedMinus.MouseButton1Click:Connect(function()
-	humanoid.WalkSpeed = math.max(baseSpeed, humanoid.WalkSpeed - 5)
+	humanoid.WalkSpeed = math.max(0, humanoid.WalkSpeed - 5)
 end)
 
--- Fly loop con movimiento en dirección actual
+-- Fly loop con dirección y subir/bajar
 RunService.RenderStepped:Connect(function()
 	if flying then
-		local moveDirection = humanoid.MoveDirection
+		local moveDir = humanoid.MoveDirection
 		local yVel = 0
-		local UserInputService = game:GetService("UserInputService")
 		if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
 			yVel = flySpeed
 		elseif UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
 			yVel = -flySpeed
 		end
-		bodyVelocity.Velocity = moveDirection * flySpeed + Vector3.new(0,yVel,0)
+		bodyVelocity.Velocity = moveDir * flySpeed + Vector3.new(0,yVel,0)
 	else
 		bodyVelocity.Velocity = Vector3.new(0,0,0)
 	end
