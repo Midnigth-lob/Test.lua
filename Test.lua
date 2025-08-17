@@ -1,5 +1,6 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -7,27 +8,26 @@ local humanoid = character:WaitForChild("Humanoid")
 local hrp = character:WaitForChild("HumanoidRootPart")
 local PlayerGui = player:WaitForChild("PlayerGui")
 
--- Crear ScreenGui y Frame principal
+-- Crear GUI
 local ScreenGui = Instance.new("ScreenGui", PlayerGui)
 ScreenGui.Name = "ScriptPanel"
 ScreenGui.ResetOnSpawn = false
 
 local Frame = Instance.new("Frame", ScreenGui)
-Frame.Size = UDim2.new(0, 300, 0, 300)
-Frame.Position = UDim2.new(0.5, -150, 0.5, -150)
-Frame.BackgroundColor3 = Color3.fromRGB(200, 30, 30)
+Frame.Size = UDim2.new(0,300,0,300)
+Frame.Position = UDim2.new(0.5,-150,0.5,-150)
+Frame.BackgroundColor3 = Color3.fromRGB(200,30,30)
 Frame.BorderSizePixel = 0
 
-local Tittle = Instance.new("TextLabel", Frame)
-Tittle.Size = UDim2.new(1,0,0.1,0)
-Tittle.BackgroundTransparency = 1
-Tittle.Text = "DuxG3n Hub"
-Tittle.Font = Enum.Font.GothamBold
-Tittle.TextSize = 20
-Tittle.TextColor3 = Color3.new(1,1,1)
+local Title = Instance.new("TextLabel", Frame)
+Title.Size = UDim2.new(1,0,0.1,0)
+Title.BackgroundTransparency = 1
+Title.Text = "DuxG3n Hub"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 20
+Title.TextColor3 = Color3.new(1,1,1)
 
--- Función para crear botones
-local function CreateButton(name, text, posY)
+local function CreateButton(name,text,posY)
     local btn = Instance.new("TextButton", Frame)
     btn.Name = name
     btn.Text = text
@@ -40,7 +40,6 @@ local function CreateButton(name, text, posY)
     return btn
 end
 
--- Botones
 local flyBtn = CreateButton("FlyBtn","Fly: OFF",60)
 local jumpPlus = CreateButton("JumpPlus","+ Jump",120)
 local jumpMinus = CreateButton("JumpMinus","- Jump",160)
@@ -60,7 +59,7 @@ bodyVelocity.MaxForce = Vector3.new(1e5,1e5,1e5)
 bodyVelocity.Velocity = Vector3.new(0,0,0)
 bodyVelocity.Parent = hrp
 
--- Función fly toggle
+-- Fly toggle
 flyBtn.MouseButton1Click:Connect(function()
     flying = not flying
     flyBtn.Text = flying and "Fly: ON" or "Fly: OFF"
@@ -69,7 +68,7 @@ flyBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- JumpHeight botones
+-- Jump botones
 jumpPlus.MouseButton1Click:Connect(function()
     humanoid.JumpHeight = humanoid.JumpHeight + 5
 end)
@@ -77,7 +76,7 @@ jumpMinus.MouseButton1Click:Connect(function()
     humanoid.JumpHeight = math.max(baseJump, humanoid.JumpHeight - 5)
 end)
 
--- WalkSpeed botones
+-- Speed botones
 speedPlus.MouseButton1Click:Connect(function()
     humanoid.WalkSpeed = math.clamp(humanoid.WalkSpeed + 5, baseSpeed, 100)
 end)
@@ -90,13 +89,10 @@ closeBtn.MouseButton1Click:Connect(function()
     Frame.Visible = false
 end)
 
--- Loop de Fly
+-- Loop fly
 RunService.RenderStepped:Connect(function()
     if flying then
-        -- Subir/descender con botones mobile
-        local up = humanoid.WalkSpeed -- aquí podes agregar botones UP/DOWN si querés
-        local direction = Vector3.new(0,1,0) -- solo vertical
-        bodyVelocity.Velocity = direction * flySpeed
+        bodyVelocity.Velocity = Vector3.new(0,flySpeed,0)
     else
         bodyVelocity.Velocity = Vector3.new(0,0,0)
     end
