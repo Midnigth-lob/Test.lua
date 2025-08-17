@@ -2,6 +2,7 @@ local remotes = {
     "ServerMessage",
     "BanPlayer",
     "skibidtoilet"
+	"AntiexplpoitOwO"
 }
 
 for _, name in pairs(remotes) do
