@@ -18,7 +18,7 @@ Frame.BorderSizePixel = 0
 Frame.Parent = ScreenGui
 
 local Title = Instance.new("TextLabel")
-Title.Text = "DuxG3n Hub"
+Title.Text = "DuxG3n8 Hub"
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 19
 Title.BackgroundTransparency = 1
