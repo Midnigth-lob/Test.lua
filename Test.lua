@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 
--- Variables de GUI
+-- GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ScriptPanel"
 ScreenGui.ResetOnSpawn = false
@@ -11,7 +11,7 @@ ScreenGui.Parent = PlayerGui
 
 local Frame = Instance.new("Frame")
 Frame.Name = "Main Frame"
-Frame.BackgroundColor3 = Color3.new(1, 0.117647, 0)
+Frame.BackgroundColor3 = Color3.fromRGB(255,30,0)
 Frame.Size = UDim2.new(0, 300, 0, 400)
 Frame.Position = UDim2.new(0.5, -150, 0.5, -200)
 Frame.BorderSizePixel = 0
@@ -26,18 +26,18 @@ Title.Size = UDim2.new(1, 0, 0.1, 0)
 Title.TextColor3 = Color3.new(1,1,1)
 Title.Parent = Frame
 
-local function ButtonsCreates(name, text, positionY)
-	local button = Instance.new("TextButton")
-	button.Name = name
-	button.Text = text
-	button.Font = Enum.Font.Gotham
-	button.TextSize = 16
-	button.TextColor3 = Color3.new(1,1,1)
-	button.BackgroundColor3 = Color3.fromRGB(150,0,0)
-	button.Size = UDim2.new(0.8,0,0.08,0)
-	button.Position = UDim2.new(0.1,0,positionY,0)
-	button.Parent = Frame
-	return button
+local function ButtonsCreates(name,text,posY)
+	local btn = Instance.new("TextButton")
+	btn.Name = name
+	btn.Text = text
+	btn.Font = Enum.Font.Gotham
+	btn.TextSize = 16
+	btn.TextColor3 = Color3.new(1,1,1)
+	btn.BackgroundColor3 = Color3.fromRGB(150,0,0)
+	btn.Size = UDim2.new(0.8,0,0.08,0)
+	btn.Position = UDim2.new(0.1,0,posY,0)
+	btn.Parent = Frame
+	return btn
 end
 
 -- Botones
@@ -50,7 +50,6 @@ local speedMinus = ButtonsCreates("SpeedMinus","- Speed",0.66)
 local speedPlus = ButtonsCreates("SpeedPlus","+ Speed",0.74)
 local closeBtn = ButtonsCreates("CloseButton","Cerrar",0.85)
 
--- Floating Button
 local FloatingButton = Instance.new("TextButton")
 FloatingButton.Name = "FloatingButton"
 FloatingButton.Text = "Abrir Panel"
@@ -72,7 +71,7 @@ FloatingButton.MouseButton1Click:Connect(function()
 	FloatingButton.Visible = false
 end)
 
--- Variables de control
+-- Variables
 local flying = false
 local flySpeed = 50
 local flyY = 0
@@ -86,29 +85,28 @@ local function setupCharacter(char)
 	baseJump = humanoid.JumpHeight
 	baseSpeed = humanoid.WalkSpeed
 
-	-- BodyVelocity
 	if bodyVelocity then bodyVelocity:Destroy() end
 	bodyVelocity = Instance.new("BodyVelocity")
-	bodyVelocity.MaxForce = Vector3.new(1e5,1e5,1e5)
+	bodyVelocity.MaxForce = Vector3.new(0,0,0) -- inicial sin control
 	bodyVelocity.Velocity = Vector3.new(0,0,0)
 	bodyVelocity.Parent = hrp
 end
 
--- Conectar CharacterAdded
 player.CharacterAdded:Connect(function(char)
 	setupCharacter(char)
 end)
-
--- Si ya existe Character
-if player.Character then
-	setupCharacter(player.Character)
-end
+if player.Character then setupCharacter(player.Character) end
 
 -- Fly toggle
 flyBtn.MouseButton1Click:Connect(function()
 	flying = not flying
 	flyBtn.Text = flying and "Fly: ON" or "Fly: OFF"
-	if not flying then flyY = 0 end
+	if flying then
+		bodyVelocity.MaxForce = Vector3.new(1e5,1e5,1e5)
+	else
+		bodyVelocity.MaxForce = Vector3.new(0,0,0)
+		flyY = 0
+	end
 end)
 
 -- Fly subir/bajar
@@ -121,13 +119,13 @@ end)
 
 -- Jump y WalkSpeed
 jumpPlus.MouseButton1Click:Connect(function()
-	if humanoid then humanoid.JumpHeight = humanoid.JumpHeight + 5 end
+	if humanoid then humanoid.JumpHeight += 5 end
 end)
 jumpMinus.MouseButton1Click:Connect(function()
 	if humanoid then humanoid.JumpHeight = math.max(0, humanoid.JumpHeight - 5) end
 end)
 speedPlus.MouseButton1Click:Connect(function()
-	if humanoid then humanoid.WalkSpeed = humanoid.WalkSpeed + 5 end
+	if humanoid then humanoid.WalkSpeed += 5 end
 end)
 speedMinus.MouseButton1Click:Connect(function()
 	if humanoid then humanoid.WalkSpeed = math.max(0, humanoid.WalkSpeed - 5) end
@@ -138,9 +136,5 @@ RunService.RenderStepped:Connect(function()
 	if flying and hrp and humanoid then
 		local moveDir = humanoid.MoveDirection
 		bodyVelocity.Velocity = moveDir * flySpeed + Vector3.new(0,flyY,0)
-	else
-		if bodyVelocity then
-			bodyVelocity.Velocity = Vector3.new(0,0,0)
-		end
 	end
 end)
