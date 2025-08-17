@@ -8,7 +8,6 @@ for _, remote in pairs(remotesFolder:GetChildren()) do
     end
 end
 
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
