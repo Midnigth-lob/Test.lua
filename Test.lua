@@ -1,21 +1,3 @@
-local myArray = {}
-
-local Replicated = game:GetService("ReplicatedStorage")
-local folder = Replicated:WaitForChild("AutoSerde"):WaitForChild("AntiexplpoitOwO")
-
-for _, remote in pairs(folder:GetChildren()) do
-    if remote:IsA("RemoteEvent") then
-        table.insert(myArray, remote.Name) -- guardamos solo el nombre
-    end
-end
-
--- Ahora podés iterar usando los nombres
-for _, name in ipairs(myArray) do
-    print(name)
-end
-
-
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
