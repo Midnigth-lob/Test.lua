@@ -1,7 +1,9 @@
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
 
+-- Crear GUI
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ScriptPanel"
 ScreenGui.ResetOnSpawn = false
@@ -15,14 +17,15 @@ Frame.Position = UDim2.new(0.5, -150, 0.5, -150)
 Frame.BorderSizePixel = 0
 Frame.Parent = ScreenGui
 
-local Tittle = Instance.new("TextLabel")
-Tittle.Name = "TitleLabel"
-Tittle.Text = "DuxG3n Hub"
-Tittle.Font = Enum.Font.GothamBold
-Tittle.TextSize = 19
-Tittle.BackgroundTransparency = 1
-Tittle.Size = UDim2.new(1, 0, 0.1, 0)
-Tittle.Parent = Frame
+local Title = Instance.new("TextLabel")
+Title.Name = "TitleLabel"
+Title.Text = "DuxG3n Hub"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 19
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(1, 0, 0.1, 0)
+Title.TextColor3 = Color3.new(1,1,1)
+Title.Parent = Frame
 
 local function ButtonsCreates(name, text, positionY)
 	local button = Instance.new("TextButton")
@@ -38,6 +41,7 @@ local function ButtonsCreates(name, text, positionY)
 	return button
 end
 
+-- Botones
 local flyBtn = ButtonsCreates("Volar", "Fly: OFF", 0.2)
 local jumpMinus = ButtonsCreates("JumpMinus", "- Jump", 0.35)
 local jumpPlus = ButtonsCreates("JumpPlus", "+ Jump", 0.45)
@@ -67,7 +71,7 @@ FloatingButton.MouseButton1Click:Connect(function()
 	FloatingButton.Visible = false
 end)
 
--- Variables de control
+-- Variables
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local hrp = character:WaitForChild("HumanoidRootPart")
@@ -76,26 +80,27 @@ local flySpeed = 50
 
 -- BodyVelocity para fly
 local bodyVelocity = Instance.new("BodyVelocity")
-bodyVelocity.MaxForce = Vector3.new(400000, 400000, 400000)
+bodyVelocity.MaxForce = Vector3.new(1e5,1e5,1e5)
 bodyVelocity.Velocity = Vector3.new(0,0,0)
 bodyVelocity.Parent = hrp
 
--- Fly
+-- Fly toggle
 flyBtn.MouseButton1Click:Connect(function()
 	flying = not flying
 	flyBtn.Text = flying and "Fly: ON" or "Fly: OFF"
 	if not flying then
-		bodyVelocity.Velocity = Vector3.new(0,0,0) -- detiene al desactivar
+		bodyVelocity.Velocity = Vector3.new(0,0,0)
 	end
 end)
 
--- JumpHeight y WalkSpeed iniciales
+-- Jump y WalkSpeed
 local baseJump = humanoid.JumpHeight
 local baseSpeed = humanoid.WalkSpeed
 
 jumpPlus.MouseButton1Click:Connect(function()
 	humanoid.JumpHeight = humanoid.JumpHeight + 5
 end)
+
 jumpMinus.MouseButton1Click:Connect(function()
 	humanoid.JumpHeight = math.max(baseJump, humanoid.JumpHeight - 5)
 end)
@@ -103,14 +108,23 @@ end)
 speedPlus.MouseButton1Click:Connect(function()
 	humanoid.WalkSpeed = humanoid.WalkSpeed + 5
 end)
+
 speedMinus.MouseButton1Click:Connect(function()
 	humanoid.WalkSpeed = math.max(baseSpeed, humanoid.WalkSpeed - 5)
 end)
 
--- Fly loop
-game:GetService("RunService").RenderStepped:Connect(function()
+-- Fly loop con movimiento en dirección actual
+RunService.RenderStepped:Connect(function()
 	if flying then
-		bodyVelocity.Velocity = Vector3.new(0, flySpeed, 0)
+		local moveDirection = humanoid.MoveDirection
+		local yVel = 0
+		local UserInputService = game:GetService("UserInputService")
+		if UserInputService:IsKeyDown(Enum.KeyCode.Space) then
+			yVel = flySpeed
+		elseif UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+			yVel = -flySpeed
+		end
+		bodyVelocity.Velocity = moveDirection * flySpeed + Vector3.new(0,yVel,0)
 	else
 		bodyVelocity.Velocity = Vector3.new(0,0,0)
 	end
