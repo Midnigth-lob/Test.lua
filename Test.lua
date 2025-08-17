@@ -5,13 +5,13 @@ local folder = Replicated:WaitForChild("AutoSerde"):WaitForChild("AntiexplpoitOw
 
 for _, remote in pairs(folder:GetChildren()) do
     if remote:IsA("RemoteEvent") then
-        table.insert(myArray, remote) -- guardamos el objeto RemoteEvent
+        table.insert(myArray, remote.Name) -- guardamos solo el nombre
     end
 end
 
--- Ahora podés acceder a cada RemoteEvent así:
-for _, remote in ipairs(myArray) do
-    print(remote.Name)
+-- Ahora podés iterar usando los nombres
+for _, name in ipairs(myArray) do
+    print(name)
 end
 
 
