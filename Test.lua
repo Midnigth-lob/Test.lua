@@ -1,3 +1,15 @@
+local Replicated = game:GetService("ReplicatedStorage")
+local remotes = Replicated:WaitForChild("AutoSerde"):WaitForChild("AntiexplpoitOwO")
+
+for , name in pairs(remotes) do
+    local remote = game:GetService("ReplicatedStorage"):FindFirstChild(name)
+    if remote and remote:IsA("RemoteEvent") then
+
+        remote:Destroy()
+        print("[ANTIKICK] Remote destruido: " .. name)
+    end
+end
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
